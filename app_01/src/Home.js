@@ -1,16 +1,12 @@
 
 import React, {useEffect, useState} from 'react';
 import {motion} from "framer-motion";
-import TComponent from "./tess";
 import messages from "./messages.json";
-import axios from "axios";
 import './App.css';
-const PEXELS_API_KEY = 'wefIWGWTWNpN9eSabB4s0dKbGQYYxyFdDLp5ATlHEAfPT6d9S1svyBPP';
+const UNSPLASH_ACCESS_KEY = 'Fx0aspaA1ZS8jUWJ126oMMnT7N3YP0X7UfhuVQU2i8M';
 function Home() {
     const [currentMessage, setCurrentMessage] = useState("");
     const saluturi = messages.saluturi;
-    const [backgroundImage, setBackgroundImage] = useState(null);
-    const [error, setError] = useState(null);
     useEffect(() => {
 
         setCurrentMessage(saluturi[Math.floor(Math.random() * saluturi.length)]);
@@ -20,29 +16,30 @@ function Home() {
         }, 3000);
         return () => clearInterval(intervalId);
     }, [saluturi]); // mesaj de salut
+    const [currentQuote, setCurrentQuote] = useState("");
+    const quotes = messages.quotes;
+    useEffect(() => {
+        setCurrentQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+        const intervalId2 = setInterval(() => {
+            const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            setCurrentQuote(newQuote);
+        }, 30000);
+        return () => clearInterval(intervalId2);
+    }, [quotes]); // citate
+    const [backgroundImage, setBackgroundImage] = useState(null);
+    const [error, setError] = useState(null);
     useEffect(() => {
         const fetchBackgroundImage = async () => {
             try {
-                const response = await axios.get('https://api.pexels.com/v1/search', {
+                const response = await axios.get('https://api.unsplash.com/photos/random', {
+                    params: { query: 'landscape' },
                     headers: {
-                        Authorization: `Bearer ${PEXELS_API_KEY}`,
-                    },
-                    params: {
-
-                        per_page: 1,
-                        page: Math.floor(Math.random() * 100),
+                        Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
                     },
                 });
-
-                if (response.data && response.data.photos.length > 0) {
-                    const randomPhoto = response.data.photos[0].src.original;
-                    setBackgroundImage(randomPhoto);
-                } else {
-                    setError("No image found.");
-                }
+                setBackgroundImage(response.data.urls.full); // Obține URL-ul imaginii mari
             } catch (err) {
-                console.error('API Error:', err.response || err);
-                setError("Couldn't fetch image from Pexels.");
+                setError("Couldn't fetch image from Unsplash.");
             }
         };
 
@@ -50,12 +47,12 @@ function Home() {
     }, []);
     return(
         <div
-            className="App"
+            className="App "
             style={{
                 height: '100vh',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'url(https://jimpattersonphotography.com/wordpress/wp-content/gallery/sierra-nevada/Sierra-Nevada-Mountain-Landscape-Sailor-Lake-Sunrise.jpg)', // Fallback la o imagine default
+                backgroundImage: /*backgroundImage ? `url(${backgroundImage})` : */'url(https://jimpattersonphotography.com/wordpress/wp-content/gallery/sierra-nevada/Sierra-Nevada-Mountain-Landscape-Sailor-Lake-Sunrise.jpg)', // Fallback la o imagine default
             }}
         >
             <header className="App-header">
@@ -67,20 +64,18 @@ function Home() {
                         className="alert text-center  p-4"
                         style={{fontSize: "2rem", fontWeight: "bold", maxWidth: "600px"}}
                     >
-                        <h1>{currentMessage}</h1>
-                        <button
+                        <h1 className="fs-1">{currentMessage}</h1>
+                        <p className="fs-6 fw-normal">{currentQuote}</p>
+                        <a
                             className="btn btn-outline-secondary text-white mt-3"
-
+                            href="/workspace"
                         >
                             Start Using!
-                        </button>
+                        </a>
                     </motion.div>
 
                 </div>
             </header>
-            <div style={{padding: '20px', color: 'white'}}>
-                <TComponent/>
-            </div>
         </div>);
 }
 
