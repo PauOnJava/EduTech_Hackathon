@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {motion} from "framer-motion";
 import messages from "./messages.json";
 import './App.css';
+import axios from 'axios';
 const UNSPLASH_ACCESS_KEY = 'Fx0aspaA1ZS8jUWJ126oMMnT7N3YP0X7UfhuVQU2i8M';
 function Home() {
     const [currentMessage, setCurrentMessage] = useState("");
@@ -52,7 +53,7 @@ function Home() {
                 height: '100vh',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundImage: /*backgroundImage ? `url(${backgroundImage})` : */'url(https://jimpattersonphotography.com/wordpress/wp-content/gallery/sierra-nevada/Sierra-Nevada-Mountain-Landscape-Sailor-Lake-Sunrise.jpg)', // Fallback la o imagine default
+                backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'url(https://jimpattersonphotography.com/wordpress/wp-content/gallery/sierra-nevada/Sierra-Nevada-Mountain-Landscape-Sailor-Lake-Sunrise.jpg)', // Fallback la o imagine default
             }}
         >
             <header className="App-header">
