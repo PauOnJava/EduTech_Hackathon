@@ -4,7 +4,7 @@ import {motion} from "framer-motion";
 import messages from "./messages.json";
 import './App.css';
 import axios from 'axios';
-const UNSPLASH_ACCESS_KEY = 'Fx0aspaA1ZS8jUWJ126oMMnT7N3YP0X7UfhuVQU2i8M';
+const UNSPLASH_ACCESS_KEY = 'nu merge' /*'Fx0aspaA1ZS8jUWJ126oMMnT7N3YP0X7UfhuVQU2i8M'*/;
 function Home() {
     const [currentMessage, setCurrentMessage] = useState("");
     const saluturi = messages.saluturi;
@@ -48,7 +48,7 @@ function Home() {
     }, []);
     return(
         <div
-            className="App "
+            className="App m-0 "
             style={{
                 height: '100vh',
                 backgroundSize: 'cover',
@@ -56,7 +56,7 @@ function Home() {
                 backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'url(https://jimpattersonphotography.com/wordpress/wp-content/gallery/sierra-nevada/Sierra-Nevada-Mountain-Landscape-Sailor-Lake-Sunrise.jpg)', // Fallback la o imagine default
             }}
         >
-            <header className="App-header">
+            <header className="App-header m-0">
                 <div className="d-flex justify-content-center align-items-center vh-100 ">
                     <motion.div
                         initial={{opacity: 0, y: -100}}

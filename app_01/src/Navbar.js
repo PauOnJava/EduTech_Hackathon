@@ -7,11 +7,32 @@ import {BrowserRouter as Router, Link, Route, Routes} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import imagePath from './assets/ME.png';
-const Navbar = () => {
+import './Navbar.css';
+const Navbar = ({ navbarType }) => {
+    const [lastScrollTop, setLastScrollTop] = useState(0);
+    const [showNavbar, setShowNavbar] = useState(true);
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
+            if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
+
+                setShowNavbar(false);
+            } else {
+
+                setShowNavbar(true);
+            }
+            setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop); // Asigurăm că nu va fi negativ
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [lastScrollTop]);
+    const navbarClass = navbarType === 'fixed' ? 'navbar fixed-top' : 'navbar sticky-top';
+    const navbarVisibility = showNavbar ? '' : 'd-none'; // 'd-none' va ascunde navbar-ul
    return (
        <Router>
-           <nav className="navbar navbar-expand-lg navbar-light fixed-top shadow-md bg-dark bg-opacity-50" style={{backgroundColor: 'transparent'}}>
+           <div className={`${navbarVisibility}`}>
+           <nav className="navbar navbar-expand-lg fixed-top navbar-light sticky-top shadow-md bg-dark bg-opacity-50" style={{backgroundColor: 'transparent'}}>
                <div className="container">
                    <a className="navbar-brand text-white" href="/">
                        <img src={imagePath} alt="MemoMe Logo" style={{width: '40px', height: '40px', marginRight: '10px'}}/>
@@ -38,7 +59,7 @@ const Navbar = () => {
                        <FontAwesomeIcon icon={faUser} style={{fontSize: '1.5rem', color: '#fff'}}/>
                    </a>
                </div>
-           </nav>
+           </nav></div>
     <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/workspace" element={<Work/>}></Route>
