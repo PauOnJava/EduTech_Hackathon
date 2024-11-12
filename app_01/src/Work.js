@@ -1,34 +1,68 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaQuestionCircle } from 'react-icons/fa';
+import {db} from './firebaseConfig';
+import { collection, addDoc, getDocs, updateDoc, doc } from "firebase/firestore";
 
-function App() {
-    const [selectedNotes, setSelectedNotes] = useState(null);
-    const [notes,setNotes] = useState([
-        { id: 1, title: "nu stiui", content: "fdsfsdfdsf" },
-        { id: 2, title: "am facuto de sange", content: "fdsfdsfsdfds" },
-        { id: 3, title: "plm", content: "dasfaghjkgfd" },
-        { id: 4, title: "sugem pla", content: "dasfdghfjgkhl" },
-        { id: 5, title: "ajiafjoas", content: "Ndfgdshjkjljjhgdfsa" },
-        { id: 6, title: "fgsgsf", content: "l;kjhgfdsghjk" },
-        { id: 7, title: "fsdfdsfdsfsd", content: "Rfsdgfhjkjlk;kjhgfd" },
-        { id: 8, title: "Expfsgfdgdfgdfg", content: "l;kjhgdsfgdhfjgkgl;lo" },
-    ]);
+function Work() {
 
-    const handleContentChange = (e) => {
-        const updatedNotes = notes.map((note) =>
-            note.id === selectedNotes.id
-                ? { ...note, content: e.target.innerText }
-                : note
-        );
-        setNotes(updatedNotes);
+    const[notes, setNotes]=useState([]);
+    const[selectedNotes, setSelectedNotes] = useState(null);
+    const[newTitle, setNewTitle] = useState('');
+    const[newContent, setNewContent] = useState('');
+
+    const fetchNotes = async() =>{
+        const querySnapshot = await getDocs(collection(db,'notes'));
+        const fetchedNotes = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        setNotes(fetchedNotes);
     };
+    useEffect(() => {
+        fetchNotes();
+    },[]);
+
+    const handleAddNote = async (e) => {
+        e.preventDefault();
+
+        if(newTitle.trim() &&newContent.trim()){
+            const newNote = {title: newTitle, content: newContent};
+            const docRef = await addDoc(collection(db,'notes'),newNote);
+            setNotes([...notes, {id: docRef.id, ...newNote}]);
+            setNewTitle('');
+            setNewContent('');
+        } else{
+            alert("esti fraier")
+        }
+    };
+
+    const handleTitleChange = async(e)=>{
+        const updatedTitle = e.target.innerText;
+        setNotes(notes.map(q =>
+        q.id === selectedNotes.id ? {...q,title:updatedTitle} : q
+        ));
+
+        const notesDoc = doc(db,'notes',selectedNotes.id);
+        await updateDoc(notesDoc, {title: updatedTitle});
+    };
+
+
+    const handleContentChange = async (e) => {
+        const updatedNotes = e.target.innerText;
+            setNotes(notes.map(q =>
+            q.id === selectedNotes.id ? {...q,content:updatedNotes} : q
+            ));
+
+            const noteDoc = doc(db,'notes',selectedNotes.id);
+            await updateDoc(noteDoc,{content:updatedNotes});
+    };
+
+
 
     return (
         <div className="container-fluid " style={{
             background: "linear-gradient(180deg, #4b4b4b, #3d3d3d)",
-            borderRadius: '10px',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
         }}>
             <div className="row pt-4">
                 <div className="col-md-3 collapse d-md-block vh-100 p-4" id="sidebar"
@@ -37,7 +71,41 @@ function App() {
                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                      }}
                 >
-                    <h5 className="fw-bold mb-4 " style={{ color: '#e0e0e0' }}>Facem treaba</h5>
+                    <h5 className="fw-bold mb-4 " style={{color: '#e0e0e0'}}>Facem treaba</h5>
+
+                    <form onSubmit={handleAddNote} className="mb-4">
+                        <div className="mb2">
+                            <input type="text"
+                                   className="form-control"
+                                   placeholder="Enter Title"
+                                   value={newTitle}
+                                   onChange={(e) => setNewTitle(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb2">
+                            <textarea
+                                className="form-control"
+                                placeholder="Enter Content"
+                                value={newContent}
+                                onChange={(e) => setNewContent(e.target.value)}
+                                rows="3"
+                            ></textarea>
+                        </div>
+                        <input
+                            type="submit"
+                            value="Add Question"
+                            style={{
+                                backgroundColor: '#007bff',
+                                color: 'white',
+                                border: 'none',
+                                width: '100%',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                cursor: 'pointer'
+                            }}
+                        />
+                    </form>
+
                     <ul className="list-group list-group-flush">
                         {notes.map((notes) => (
                             <li
@@ -56,8 +124,11 @@ function App() {
                                     transition: 'background 0.3s, color 0.3s',
                                 }}
                             >
-                                <FaQuestionCircle style={{ marginRight: '10px', color: selectedNotes && selectedNotes.id === notes.id ? '#f0f0f0' : '#c0c0c0' }} />
-                                <div className="text-truncate" style={{ width: '100%' }}>{notes.title}</div>
+                                <FaQuestionCircle style={{
+                                    marginRight: '10px',
+                                    color: selectedNotes && selectedNotes.id === notes.id ? '#f0f0f0' : '#c0c0c0'
+                                }}/>
+                                <div className="text-truncate" style={{width: '100%'}}>{notes.title}</div>
                             </li>
                         ))}
                     </ul>
@@ -104,4 +175,4 @@ function App() {
     );
 }
 
-export default App;
+export default Work;
