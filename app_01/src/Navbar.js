@@ -22,13 +22,13 @@ const Navbar = ({ navbarType }) => {
 
                 setShowNavbar(true);
             }
-            setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop); // Asigurăm că nu va fi negativ
+            setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollTop]);
     const navbarClass = navbarType === 'fixed' ? 'navbar fixed-top' : 'navbar sticky-top';
-    const navbarVisibility = showNavbar ? '' : 'd-none'; // 'd-none' va ascunde navbar-ul
+    const navbarVisibility = showNavbar ? '' : 'd-none';
    return (
        <Router>
            <div className={`${navbarVisibility}`}>
