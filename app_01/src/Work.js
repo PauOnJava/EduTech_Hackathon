@@ -18,14 +18,14 @@ function App() {
 
     return (
         <div className="container-fluid">
-            <div className="row">
+            <div className="row pt-4">
                 <div className="col-md-3 collapse d-md-block vh-100 p-4" id="sidebar"
                      style={{
                          background: "linear-gradient(180deg, #2d2d2d, #1b1b1b)",
                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                      }}
                 >
-                    <h5 className="fw-bold mb-4 text-center" style={{ color: '#e0e0e0' }}>Facem treaba</h5>
+                    <h5 className="fw-bold mb-4 " style={{ color: '#e0e0e0' }}>Facem treaba</h5>
                     <ul className="list-group list-group-flush">
                         {notes.map((notes) => (
                             <li
@@ -51,7 +51,6 @@ function App() {
                     </ul>
                 </div>
 
-                {/* Main content area */}
                 <div className="col-md-9 p-4">
                     <div className="card">
                         <div className="card-body">
