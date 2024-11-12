@@ -4,8 +4,7 @@ import { FaQuestionCircle } from 'react-icons/fa';
 
 function App() {
     const [selectedNotes, setSelectedNotes] = useState(null);
-
-    const notes = [
+    const [notes,setNotes] = useState([
         { id: 1, title: "nu stiui", content: "fdsfsdfdsf" },
         { id: 2, title: "am facuto de sange", content: "fdsfdsfsdfds" },
         { id: 3, title: "plm", content: "dasfaghjkgfd" },
@@ -14,10 +13,23 @@ function App() {
         { id: 6, title: "fgsgsf", content: "l;kjhgfdsghjk" },
         { id: 7, title: "fsdfdsfdsfsd", content: "Rfsdgfhjkjlk;kjhgfd" },
         { id: 8, title: "Expfsgfdgdfgdfg", content: "l;kjhgdsfgdhfjgkgl;lo" },
-    ];
+    ]);
+
+    const handleContentChange = (e) => {
+        const updatedNotes = notes.map((note) =>
+            note.id === selectedNotes.id
+                ? { ...note, content: e.target.innerText }
+                : note
+        );
+        setNotes(updatedNotes);
+    };
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid " style={{
+            background: "linear-gradient(180deg, #4b4b4b, #3d3d3d)",
+            borderRadius: '10px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+        }}>
             <div className="row pt-4">
                 <div className="col-md-3 collapse d-md-block vh-100 p-4" id="sidebar"
                      style={{
@@ -52,18 +64,34 @@ function App() {
                 </div>
 
                 <div className="col-md-9 p-4">
-                    <div className="card">
-                        <div className="card-body">
+                    <div className="card border-0">
+                        <div className="card-body"
+                             style={{
+                                 background: "linear-gradient(180deg, #4b4b4b, #3d3d3d)",
+                             }}>
                             {selectedNotes ? (
                                 <div>
                                     <h2
                                         className="card-subtitle mb-2 text-primary"
-                                        style={{ cursor: 'pointer' }}
+                                        style={{cursor: 'pointer'}}
                                         onClick={() => alert(`You clicked on "${selectedNotes.title}"!`)}
                                     >
                                         {selectedNotes.title}
                                     </h2>
-                                    <p className="card-text">{selectedNotes.content}</p>
+                                    <div
+                                        className="card-text"
+                                        contentEditable="true"
+                                        suppressContentEditableWarning={true}
+                                        onInput={handleContentChange}
+                                        style={{
+                                            padding: '10px',
+                                            background: "linear-gradient(180deg, #4b4b4b, #3d3d3d)",
+                                            minHeight: '100px',
+                                            outline: 'none',
+                                        }}
+                                    >
+                                        {selectedNotes.content}
+                                    </div>
                                 </div>
                             ) : (
                                 <p className="card-text">am facut treaba</p>
