@@ -18,7 +18,7 @@ function App() {
 
     return (
         <div className="container-fluid">
-            <div className="row ">
+            <div className="row pt-4">
                 <div className="col-md-3 collapse d-md-block vh-100 p-4" id="sidebar"
                      style={{
                          background: "linear-gradient(180deg, #2d2d2d, #1b1b1b)",
